@@ -39,9 +39,12 @@
         </ul>
     </div>
 
-    <script src="https://unpkg.com/vue@next"></script>
-    <script>
-        Vue.createApp({
+    <!-- 載入整包Vue -->
+    <!-- <script src="https://unpkg.com/vue@next"></script> -->
+    <!-- 載入部分Vue (ESmodule) -->
+    <script type="module">
+        import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.1.4/vue.esm-browser.min.js'
+        createApp({
             // data 函式
             data() {
                 return {
@@ -74,17 +77,18 @@
                             gender: 'female',
                         },
                     ],
-                }
+                };
             },
             // methods 物件
             methods: {
                 clickAlert() {
                     alert('我被點了');
-                }
+                },
             },
-            // mounted 函式
+            // mounted 函式 可用來做初始化資料，Ajax取得的資料放在這邊
             mounted() {
-
+                console.log(this.name);
+                console.log(this.person.image);
             },
         }).mount('#app');
     </script>
