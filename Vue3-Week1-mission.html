@@ -1,12 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ProfilePage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 </head>
+
 <body>
-    
+    <div id="app" class="bg-dark">
+        <div class="container">
+            <div class="mb-3 pt-3">
+                <button type="button" class="btn btn-outline-info me-3">
+                    換一組
+                </button>
+                <button type="button" class="btn btn-outline-info me-2">
+                    切換大頭貼解析度
+                </button>
+                現在圖片解析度：
+                <span>清晰</span>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3" v-for="item in data">
+                    <div class="card h-100" >
+                        <div class="position-absolute" style="top: 20px; right: 20px">
+                            <button type="button" class="btn btn-outline-danger rounded-pill">
+                                <i class="bi bi-heart fs-5"></i>
+                            </button>
+                        </div>
+                        <img :src="item.picture.large" class="card-img-top" />
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{item.name.first +" "+ item.name.last}}( <span v-if="item.gender === 'male'">👨</span><span v-else>👩</span> )
+                            </h5>
+                            <p class="card-text">
+                                Email：<a :href="item.email">{{ item.email }}</a>
+                            </p>
+                            <p class="card-text">
+                                Phone: <a :href="item.phone">{{ item.phone }}</a>
+                            </p>
+                            <p class="card-text">
+                                Cell: <a :href="item.cell">{{ item.cell }}</a>
+                            </p>
+                            <p class="card-text">City: {{ item.location.city }}</p>
+                            <p class="card-text">State: {{ item.location.state }}</p>
+                            <p class="card-text">Country: {{ item.location.country }}</p>
+                            <p class="card-text">Postcode: {{ item.location.postcode }}</p>
+                            <p style="height:48px">
+                                Address：<a :href="`https://www.google.com.tw/maps/search/${item.location.city} ${item.location.state}`"
+                                    target="_blank">{{ item.location.city }} {{ item.location.state }} {{ item.location.country }} {{ item.location.postcode }}</a>
+                            </p>
+                            <p class="card-text">
+                                description: {{ item.location.timezone.description }}
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">dob：{{ item.dob.date }}</small>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">registered：{{ item.registered.date }}</small>
+                            </p>
+                            <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0"
+                                marginwidth="0"
+                                :src="`https://maps.google.com.tw/maps?f=q&amp;hl=zh-TW&amp;geocode=&amp;q=${item.location.coordinates.latitude},${item.location.coordinates.longitude}&amp;z=10&amp;output=embed`"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module">
+        import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
+        createApp({
+            data() {
+                return{
+                    data: [],
+                };
+            },
+            methods: {
+
+            },
+            mounted() {
+                axios.get('https://randomuser.me/api/?results=6').then(response => {
+                    console.log(response);
+                    this.data = response.data.results;
+                });
+            }
+        }).mount('#app');
+    </script>
 </body>
+
 </html>
