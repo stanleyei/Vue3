@@ -14,48 +14,53 @@
 <body>
     <div id="app" class="bg-dark">
         <div class="container">
-            <div class="mb-3 pt-3">
-                <button type="button" class="btn btn-outline-info me-3">
+            <div class="mb-3 pt-3 text-light">
+                <button type="button" class="btn btn-outline-info me-3" @click="getData()">
                     換一組
                 </button>
-                <button type="button" class="btn btn-outline-info me-2">
+                <button type="button" class="btn btn-outline-info me-3" @click="pictureTypeIndex = ++pictureTypeIndex%3">
                     切換大頭貼解析度
                 </button>
                 現在圖片解析度：
-                <span>清晰</span>
+                <span class="text-light">{{pictureType[pictureTypeIndex].name}}</span>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3" v-for="item in data">
-                    <div class="card h-100" >
+                    <div class="card h-100">
                         <div class="position-absolute" style="top: 20px; right: 20px">
-                            <button type="button" class="btn btn-outline-danger rounded-pill">
-                                <i class="bi bi-heart fs-5"></i>
+                            <button type="button" class="btn btn-outline-danger rounded-pill"
+                                @click="item.like = !item.like">
+                                <i class="bi bi-heart-fill fs-5" v-if="item.like"></i>
+                                <i class="bi bi-heart fs-5" v-else></i>
                             </button>
                         </div>
-                        <img :src="item.picture.large" class="card-img-top" />
+                        <img :src="item.picture[pictureType[pictureTypeIndex].key]" class="card-img-top" />
                         <div class="card-body">
                             <h5 class="card-title">
-                                {{item.name.first +" "+ item.name.last}}( <span v-if="item.gender === 'male'">👨</span><span v-else>👩</span> )
+                                {{item.name.first +" "+ item.name.last}}( <span
+                                    v-if="item.gender === 'male'">👨</span><span v-else>👩</span> )
                             </h5>
                             <p class="card-text">
                                 Email：<a :href="item.email">{{ item.email }}</a>
                             </p>
                             <p class="card-text">
-                                Phone: <a :href="item.phone">{{ item.phone }}</a>
+                                Phone：<a :href="item.phone">{{ item.phone }}</a>
                             </p>
                             <p class="card-text">
-                                Cell: <a :href="item.cell">{{ item.cell }}</a>
+                                Cell：<a :href="item.cell">{{ item.cell }}</a>
                             </p>
-                            <p class="card-text">City: {{ item.location.city }}</p>
-                            <p class="card-text">State: {{ item.location.state }}</p>
-                            <p class="card-text">Country: {{ item.location.country }}</p>
-                            <p class="card-text">Postcode: {{ item.location.postcode }}</p>
+                            <p class="card-text">City：{{ item.location.city }}</p>
+                            <p class="card-text">State：{{ item.location.state }}</p>
+                            <p class="card-text">Country：{{ item.location.country }}</p>
+                            <p class="card-text">Postcode：{{ item.location.postcode }}</p>
                             <p style="height:48px">
-                                Address：<a :href="`https://www.google.com.tw/maps/search/${item.location.city} ${item.location.state}`"
-                                    target="_blank">{{ item.location.city }} {{ item.location.state }} {{ item.location.country }} {{ item.location.postcode }}</a>
+                                Address：<a
+                                    :href="`https://www.google.com.tw/maps/search/${item.location.city} ${item.location.state}`"
+                                    target="_blank">{{ item.location.city }} {{ item.location.state }} {{
+                                    item.location.country }} {{ item.location.postcode }}</a>
                             </p>
-                            <p class="card-text">
-                                description: {{ item.location.timezone.description }}
+                            <p class="card-text" style="height:48px">
+                                description：{{ item.location.timezone.description }}
                             </p>
                             <p class="card-text">
                                 <small class="text-muted">dob：{{ item.dob.date }}</small>
@@ -83,18 +88,25 @@
         import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
         createApp({
             data() {
-                return{
+                return {
                     data: [],
+                    pictureTypeIndex: 0,
+                    pictureType: [
+                        { key: 'large', name: '清晰' },
+                        { key: 'medium', name: '中等' },
+                        { key: 'thumbnail', name: '模糊' }
+                    ],
                 };
             },
             methods: {
-
+                getData() {
+                    axios.get('https://randomuser.me/api/?results=6').then(response => {
+                        this.data = response.data.results;
+                    });
+                }
             },
             mounted() {
-                axios.get('https://randomuser.me/api/?results=6').then(response => {
-                    console.log(response);
-                    this.data = response.data.results;
-                });
+                this.getData();
             }
         }).mount('#app');
     </script>
