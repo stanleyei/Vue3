@@ -26,7 +26,7 @@
                 <span class="text-light fs-5 fw-bold">{{pictureType[pictureTypeIndex].name}}</span>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-3" v-for="item in data">
+                <div class="col-md-4 mb-3" v-for="(item, key) in data">
                     <div class="card h-100">
                         <div class="position-absolute" style="top: 20px; right: 20px">
                             <button type="button" class="btn btn-outline-danger rounded-pill"
