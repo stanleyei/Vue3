@@ -25,39 +25,48 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="exampleFormControlInput1" class="form-label">第一個數字</label>
-                            <input id="num1" type="number" class="form-control" placeholder="請輸入要計算的第一個數字" />
+                            <input v-model.number="inputValue1" id="num1" type="number" class="form-control"
+                                placeholder="請輸入要計算的第一個數字" />
                         </div>
                         <div class="col-md-6">
                             <label for="num2" class="form-label">第二個數字</label>
-                            <input id="num2" type="number" class="form-control" placeholder="請輸入要計算的第二個數字" />
+                            <input v-model.number="inputValue2" id="num2" type="number" class="form-control"
+                                placeholder="請輸入要計算的第二個數字" />
                         </div>
                         <div class="col-md-12 mt-3">
                             <div class="btn-group w-100">
-                                <button type="button" class="btn btn-outline-primary w-25">
+                                <button :class="{ active: symbol === '+'}" @click="symbol = '+'" type="button"
+                                    class="btn btn-outline-primary w-25">
                                     +
                                 </button>
-                                <button type="button" class="btn btn-outline-primary w-25">
+                                <button :class="{ active: symbol === '-'}" @click="symbol = '-'" type=" button"
+                                    class="btn btn-outline-primary w-25">
                                     -
                                 </button>
-                                <button type="button" class="btn btn-outline-primary w-25">
+                                <button :class="{ active: symbol === '*'}" @click="symbol = '*'" type=" button"
+                                    class="btn btn-outline-primary w-25">
                                     *
                                 </button>
-                                <button type="button" class="btn btn-outline-primary w-25">
+                                <button :class="{ active: symbol === '÷'}" @click="symbol = '÷'" type=" button"
+                                    class="btn btn-outline-primary w-25">
                                     /
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-outline-primary d-block mt-3 w-100">
+                    <button type="button" class="btn btn-outline-primary d-block mt-3 w-100" @click="calculate">
                         計算結果
                     </button>
-                    <h4 class="mt-3">結果：100</h4>
+                    <h4 class="mt-3">結果：{{ result }}</h4>
                 </div>
                 <div class="col-3">
-                    <h5>歷史紀錄</h5>
-                    <ul>
+                    <div class="d-flex justify-content-between">
+                        <h5 class="m-0 d-flex align-items-center">歷史紀錄</h5>
+                        <button @click="clear" class="btn btn-outline-primary">清空紀錄</button>
+                    </div>
+                    <ul v-for="(item, key) in history" :key="key">
                         <li>
-                            1 + 1 = 2
+                            {{ item }}
                         </li>
                     </ul>
                 </div>
@@ -70,11 +79,49 @@
         createApp({
             data() {
                 return {
-                    
+                    inputValue1: '',
+                    inputValue2: '',
+                    symbol: '',
+                    result: '',
+                    history: JSON.parse(localStorage.getItem("history")) || [],
                 };
             },
             methods: {
+                calculate() {
+                    if (this.inputValue1 !== '' && this.inputValue2 !== '' && this.symbol !== '') {
+                        if (this.symbol === '+') {
+                            this.result = this.inputValue1 + this.inputValue2;
+                        } else if (this.symbol === '-') {
+                            this.result = this.inputValue1 - this.inputValue2;
+                        } else if (this.symbol === '*') {
+                            this.result = this.inputValue1 * this.inputValue2;
+                        } else {
+                            this.result = this.inputValue1 / this.inputValue2;
+                        }
+                        this.record();
+                        this.reset();
+                    };
+                },
 
+                record() {
+                    this.history.unshift(`${this.inputValue1} ${this.symbol} ${this.inputValue2} = ${this.result}`);
+                    localStorage.setItem('history', JSON.stringify(this.history));
+                    if(this.history.length > 10) {
+                        this.history.pop();
+                    };
+                },
+
+                reset() {
+                    this.inputValue1 = '';
+                    this.inputValue2 = '';
+                    this.symbol = '';
+                },
+
+                clear() {
+                    localStorage.clear();
+                    this.result = '';
+                    this.history = [];
+                },
             },
             mounted() {
 
