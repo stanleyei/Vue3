@@ -21,17 +21,17 @@
         <div id="app" class="container my-3">
             <div class="input-group mb-3">
                 <span class="input-group-text">待辦事項</span>
-                <input type="text" class="form-control" placeholder="準備要做的任務" id="newTodo">
-                <button class="btn btn-primary" type="button" id="addTodo">新增</button>
+                <input type="text" class="form-control" placeholder="準備要做的任務" id="newTodo" v-model="newTodo">
+                <button class="btn btn-primary" type="button" id="addTodo" @click="addData">新增</button>
             </div>
             <div class="card text-center">
                 <ul class="list-group list-group-flush text-left" id="todoList">
-                    <li class="list-group-item">
+                    <li class="list-group-item" v-for="(list, key) in todoList" :key="key">
                         <div class="d-flex">
                             <div class="form-check">
                                 <div>
                                     <input id="a" type="checkbox" class="form-check-input">
-                                    <label for="a">代辦事項</label>
+                                    <label for="a">{{ list.list }}</label>
                                 </div>
                             </div>
                             <button type="button" class="btn-close ms-auto remove">
@@ -84,7 +84,12 @@
                 };
             },
             methods: {
-
+                addData(item) {
+                    this.todoList.push({
+                        id: this.todoList.length + 1 ,
+                        list: this.newTodo
+                    });
+                },
             },
             mounted() {
 
