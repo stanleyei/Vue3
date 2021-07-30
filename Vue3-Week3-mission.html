@@ -32,12 +32,14 @@
             </div>
             <div class="card text-center">
                 <ul class="list-group list-group-flush text-left" id="todoList">
-                    <li class="list-group-item" v-for="(list, key) in todoList" :key="key">
+                    <li class="list-group-item" v-for="(list, key) in filterTask" :key="key">
                         <div class="d-flex">
                             <div class="form-check">
                                 <div>
                                     <input :id="`list-${list.id}`" type="checkbox" class="form-check-input"
-                                        @change="checkTask(list)">
+                                        @change="checkTask(list)" v-if="list.checked === false">
+                                    <input :id="`list-${list.id}`" type="checkbox" class="form-check-input"
+                                        @change="checkTask(list)" v-else checked>
                                     <label :for="`list-${list.id}`" :class="list.class">{{ list.content }}</label>
                                 </div>
                             </div>
@@ -55,16 +57,17 @@
                                 <input id="edit" class="form-control rounded-0 rounded-end" type="text" placeholder="編輯"
                                     v-model="editTodo.content">
                             </div>
-                            <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯" @click="doneEditTask"></i>
+                            <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯"
+                                @click="doneEditTask"></i>
                         </div>
                     </li>
                 </ul>
                 <div class="card-footer d-flex justify-content-between">
                     <span>有 <span id="taskCount"> {{ todoList.length }}</span> 筆任務</span>
-                    <div>
-                        <a href="#" class="me-3">全部</a>
-                        <a href="#" class="me-3">未完成</a>
-                        <a href="#" class="me-3">已完成</a>
+                    <div class="fw-bold">
+                        <a href="#" class="me-3" @click="filterCheck = [true, false]">全部</a>
+                        <a href="#" class="me-3" @click="filterCheck = [false]">未完成</a>
+                        <a href="#" class="me-3" @click="filterCheck = [true]">已完成</a>
                         <a href="#" @click="clearAllTask">清除所有任務</a>
                     </div>
                 </div>
@@ -81,8 +84,9 @@
             data() {
                 return {
                     newTodo: '',
-                    todoList: [],
+                    todoList: JSON.parse(localStorage.getItem("history")) || [],
                     editTodo: {},
+                    filterCheck: [true, false],
                 };
             },
             methods: {
@@ -94,14 +98,17 @@
                         class: '',
                     });
                     this.newTodo = '';
+                    localStorage.setItem('history', JSON.stringify(this.todoList));
                 },
 
                 removeTask(item) {
                     const index = this.todoList.findIndex(obj => obj.id === item.id);
                     this.todoList.splice(index, 1);
+                    localStorage.setItem('history', JSON.stringify(this.todoList));
                 },
 
                 checkTask(item) {
+                    const index = this.todoList.findIndex(obj => obj.id === item.id);
                     item.checked = !item.checked;
                     item.checked ? item.class = 'completed' : item.class = '';
                 },
@@ -118,6 +125,13 @@
 
                 clearAllTask() {
                     this.todoList = [];
+                    localStorage.clear();
+                },
+            },
+            computed: {
+                filterTask() {
+                    const filterList = this.todoList.filter(list => this.filterCheck.indexOf(list.checked) >= 0);
+                    return filterList;
                 },
             },
             mounted() {
