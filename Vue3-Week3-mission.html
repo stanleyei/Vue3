@@ -108,9 +108,9 @@
                 },
 
                 checkTask(item) {
-                    const index = this.todoList.findIndex(obj => obj.id === item.id);
                     item.checked = !item.checked;
                     item.checked ? item.class = 'completed' : item.class = '';
+                    localStorage.setItem('history', JSON.stringify(this.todoList));
                 },
 
                 editTask(item) {
@@ -121,6 +121,7 @@
                     const index = this.todoList.findIndex(obj => obj.id === this.editTodo.id);
                     this.todoList[index] = this.editTodo;
                     this.editTodo = {};
+                    localStorage.setItem('history', JSON.stringify(this.todoList));
                 },
 
                 clearAllTask() {
