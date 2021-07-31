@@ -55,7 +55,7 @@
                                 <label for="edit"
                                     class="d-flex align-items-center input-group-text rounded-0 rounded-start">編輯任務</label>
                                 <input id="edit" class="form-control rounded-0 rounded-end" type="text" placeholder="編輯"
-                                    v-model="editTodo.content">
+                                    v-model="editTodo.content" @keyup.enter="doneEditTask">
                             </div>
                             <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯"
                                 @click="doneEditTask"></i>
