@@ -38,7 +38,7 @@
                                 <div>
                                     <input :id="`list-${list.id}`" type="checkbox" class="form-check-input"
                                     @click="checkTask(list)" :checked="list.checked">
-                                    <label :for="`list-${list.id}`" :class="list.class">{{ list.content }}</label>
+                                    <label :for="`list-${list.id}`" :class="list.checked ? 'completed' : ''">{{ list.content }}</label>
                                 </div>
                             </div>
                             <i class="bi bi-pencil-square ms-auto text-secondary fs-5 lh-1" @click="editTask(list)"
@@ -93,7 +93,6 @@
                         id: this.todoList.length + 1,
                         content: this.newTodo,
                         checked: false,
-                        class: '',
                     });
                     this.newTodo = '';
                     localStorage.setItem('history', JSON.stringify(this.todoList));
@@ -107,7 +106,6 @@
 
                 checkTask(item) {
                     item.checked = !item.checked;
-                    item.class = item.checked ? 'completed' : '';
                     localStorage.setItem('history', JSON.stringify(this.todoList));
                 },
 
