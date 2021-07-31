@@ -82,7 +82,7 @@
             data() {
                 return {
                     newTodo: '',
-                    todoList: JSON.parse(localStorage.getItem("history")) || [],
+                    todoList: JSON.parse(localStorage.getItem("todoList")) || [],
                     editTodo: {},
                     filterCheck: [true, false],
                 };
@@ -95,18 +95,18 @@
                         checked: false,
                     });
                     this.newTodo = '';
-                    localStorage.setItem('history', JSON.stringify(this.todoList));
+                    localStorage.setItem('todoList', JSON.stringify(this.todoList));
                 },
 
                 removeTask(item) {
                     const index = this.todoList.findIndex(obj => obj.id === item.id);
                     this.todoList.splice(index, 1);
-                    localStorage.setItem('history', JSON.stringify(this.todoList));
+                    localStorage.setItem('todoList', JSON.stringify(this.todoList));
                 },
 
                 checkTask(item) {
                     item.checked = !item.checked;
-                    localStorage.setItem('history', JSON.stringify(this.todoList));
+                    localStorage.setItem('todoList', JSON.stringify(this.todoList));
                 },
 
                 editTask(item) {
@@ -117,7 +117,7 @@
                     const index = this.todoList.findIndex(obj => obj.id === this.editTodo.id);
                     this.todoList[index] = this.editTodo;
                     this.editTodo = {};
-                    localStorage.setItem('history', JSON.stringify(this.todoList));
+                    localStorage.setItem('todoList', JSON.stringify(this.todoList));
                 },
 
                 clearAllTask() {
