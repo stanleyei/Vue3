@@ -105,14 +105,14 @@
             methods: {
                 getData() {
                     //利用axios套件取資料
-                    axios.get('https://randomuser.me/api/?results=6').then(response => {
-                        this.data = response.data.results;
-                    });
+                    // axios.get('https://randomuser.me/api/?results=6').then(response => {
+                    //     this.data = response.data.results;
+                    // });
 
                     //利用原生fetch取資料
-                    // fetch('https://randomuser.me/api/?results=6', { method: 'GET'})
-                    //     .then(response => Promise.resolve(response.json()))
-                    //     .then(result => this.data = result.results);
+                    fetch('https://randomuser.me/api/?results=6', { method: 'GET'})
+                        .then(response => response.json())
+                        .then(result => this.data = result.results);
                 },
             },
             mounted() {
