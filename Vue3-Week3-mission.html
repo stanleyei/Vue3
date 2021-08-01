@@ -63,10 +63,10 @@
                 <div class="card-footer d-flex justify-content-between">
                     <span>有 <span id="taskCount"> {{ todoList.length }}</span> 筆任務</span>
                     <div class="fw-bold">
-                        <a href="#" class="me-3" @click="filterCheck = [true, false]">全部</a>
-                        <a href="#" class="me-3" @click="filterCheck = [false]">未完成</a>
-                        <a href="#" class="me-3" @click="filterCheck = [true]">已完成</a>
-                        <a href="#" @click="clearAllTask">清除所有任務</a>
+                        <a href="#" class="me-3" @click="filterCheck = [true, false]" title="選擇全部任務">全部</a>
+                        <a href="#" class="me-3" @click="filterCheck = [false]" title="選擇未完成任務">未完成</a>
+                        <a href="#" class="me-3" @click="filterCheck = [true]" title="選擇已完成任務">已完成</a>
+                        <a href="#" @click="clearAllTask" title="清除所有任務">清除所有任務</a>
                     </div>
                 </div>
             </div>
