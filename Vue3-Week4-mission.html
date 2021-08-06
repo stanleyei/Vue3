@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: grey;
+        }
+
+        i {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="app" class="container my-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text">待辦事項</span>
+                <input type="text" class="form-control" placeholder="準備要做的任務" id="newTodo" v-model="newTodo"
+                    @keyup.enter="addTask">
+                <button class="btn btn-primary" type="button" id="addTodo" @click="addTask">新增</button>
+            </div>
+            <div class="card text-center">
+                <ul class="list-group list-group-flush text-left" id="todoList">
+                    <li class="list-group-item" v-for="(list, key) in todoList" :key="key">
+                        <div class="d-flex">
+                            <div class="form-check">
+                                <div>
+                                    <input :id="`list-${list.id}`" type="checkbox" class="form-check-input"
+                                        @click="checkTask(list)" :checked="list.checked">
+                                    <label :for="`list-${list.id}`" :class="list.checked ? 'completed' : ''">{{
+                                        list.content }}</label>
+                                </div>
+                            </div>
+                            <i class="bi bi-pencil-square ms-auto text-secondary fs-5 lh-1" @click="editTask(list)"
+                                title="編輯此任務"></i>
+                            <button type="button" class="btn-close ms-2 remove" @click="removeTask(list)" title="刪除此任務">
+                            </button>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex">
+                            <div class="form-check d-flex ps-1">
+                                <label for="edit"
+                                    class="d-flex align-items-center input-group-text rounded-0 rounded-start">編輯任務</label>
+                                <input id="edit" class="form-control rounded-0 rounded-end" type="text" placeholder="編輯"
+                                    v-model="editTodo.content" @keyup.enter="doneEditTask">
+                            </div>
+                            <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯"
+                                @click="doneEditTask"></i>
+                        </div>
+                    </li>
+                </ul>
+                <div class="card-footer d-flex justify-content-between">
+                    <span>有 <span id="taskCount"> {{ todoList.length }}</span> 筆任務</span>
+                    <div class="fw-bold">
+                        <a href="#" class="me-3" @click="filterCheck = [true, false]" title="選擇全部任務">全部</a>
+                        <a href="#" class="me-3" @click="filterCheck = [false]" title="選擇未完成任務">未完成</a>
+                        <a href="#" class="me-3" @click="filterCheck = [true]" title="選擇已完成任務">已完成</a>
+                        <a href="#" @click="clearAllTask" title="清除所有任務">清除所有任務</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+        crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { createApp, ref, computed, onMounted } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
+        const app = createApp({
+            setup() {
+                let newTodo = ref('');
+                const listKey = JSON.parse(localStorage.getItem("listKey")) || ref(1);
+                const todoList = JSON.parse(localStorage.getItem("todoList")) || ref([]);
+                const editTodo = ref({});
+                const filterCheck = ref([true, false]);
+
+                function addTask(item) {
+                    todoList.value.push({
+                        id: listKey.value,
+                        content: newTodo.value,
+                        checked: false,
+                    });
+                    listKey.value++;
+                    newTodo.value = '';
+                    // localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                    // localStorage.setItem('listKey', JSON.stringify(listKey.value));
+                };
+
+                function removeTask(item) {
+                    const index = todoList.value.findIndex(obj => obj.id === item.id);
+                    todoList.value.splice(index, 1);
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                };
+
+                function checkTask(item) {
+                    item.checked = !item.checked;
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                };
+
+                function editTask(item) {
+                    editTodo.value = { ...item };
+                };
+
+                function doneEditTask() {
+                    const index = todoList.value.findIndex(obj => obj.id === editTodo.value.id);
+                    todoList.value[index] = editTodo.value;
+                    editTodo.value = {};
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                };
+
+                function clearAllTask() {
+                    todoList.value = [];
+                    localStorage.clear();
+                };
+
+                // const filterTask = computed(() => {
+                //     return todoList.value;
+                // })
+
+                // const filterTask = computed(() => {
+                //     const filterList = todoList.filter(list => filterCheck.indexOf(list.checked) >= 0);
+                //     return filterList;
+                // });
+                // function filterTask() {
+                //     return filterList;
+                // };
+                
+                return {
+                    newTodo,
+                    editTodo,
+                    todoList,
+                    addTask,
+                    removeTask,
+                    checkTask,
+                    editTask,
+                    doneEditTask,
+                    clearAllTask,
+                    // filterTask,
+                };
+            }
+
+            // data() {
+            //     return {
+            //         newTodo: '',
+            //         index: JSON.parse(localStorage.getItem("index")) || 1,
+            //         todoList: JSON.parse(localStorage.getItem("todoList")) || [],
+            //         editTodo: {},
+            //         filterCheck: [true, false],
+            //     };
+            // },
+            // methods: {
+            //     addTask(item) {
+            //         this.todoList.push({
+            //             id: this.index,
+            //             content: this.newTodo,
+            //             checked: false,
+            //         });
+            //         this.index++;
+            //         this.newTodo = '';
+            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
+            //         localStorage.setItem('index', JSON.stringify(this.index));
+            //     },
+
+            //     removeTask(item) {
+            //         const index = this.todoList.findIndex(obj => obj.id === item.id);
+            //         this.todoList.splice(index, 1);
+            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
+            //     },
+
+            //     checkTask(item) {
+            //         item.checked = !item.checked;
+            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
+            //     },
+
+            //     editTask(item) {
+            //         this.editTodo = { ...item };
+            //     },
+
+            //     doneEditTask() {
+            //         const index = this.todoList.findIndex(obj => obj.id === this.editTodo.id);
+            //         this.todoList[index] = this.editTodo;
+            //         this.editTodo = {};
+            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
+            //     },
+
+            //     clearAllTask() {
+            //         this.todoList = [];
+            //         localStorage.clear();
+            //     },
+            // },
+            // computed: {
+            //     filterTask() {
+            //         const filterList = this.todoList.filter(list => this.filterCheck.indexOf(list.checked) >= 0);
+            //         return filterList;
+            //     },
+            // },
+            // mounted() {
+
+            // }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
