@@ -82,6 +82,7 @@
             data() {
                 return {
                     newTodo: '',
+                    index: JSON.parse(localStorage.getItem("index")) || 1,
                     todoList: JSON.parse(localStorage.getItem("todoList")) || [],
                     editTodo: {},
                     filterCheck: [true, false],
@@ -90,12 +91,14 @@
             methods: {
                 addTask(item) {
                     this.todoList.push({
-                        id: this.todoList.length + 1,
+                        id: this.index,
                         content: this.newTodo,
                         checked: false,
                     });
+                    this.index++;
                     this.newTodo = '';
                     localStorage.setItem('todoList', JSON.stringify(this.todoList));
+                    localStorage.setItem('index', JSON.stringify(this.index));
                 },
 
                 removeTask(item) {
