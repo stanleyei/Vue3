@@ -25,10 +25,10 @@
     <div id="app">
         <div id="app" class="container my-3">
             <div class="input-group mb-3">
-                <span class="input-group-text">待辦事項</span>
+                <label class="input-group-text" for="newTodo">待辦事項</label>
                 <input type="text" class="form-control" placeholder="準備要做的任務" id="newTodo" v-model="newTodo"
                     @keyup.enter="addTask">
-                <button class="btn btn-primary" type="button" id="addTodo" @click="addTask">新增</button>
+                <button class="btn btn-primary" type="button" id="addTodo" title="新增任務的按鈕" @click="addTask">新增</button>
             </div>
             <div class="card text-center">
                 <ul class="list-group list-group-flush text-left" id="todoList">
