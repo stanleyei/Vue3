@@ -54,7 +54,7 @@
                                 <label for="edit"
                                     class="d-flex align-items-center input-group-text rounded-0 rounded-start">編輯任務</label>
                                 <input id="edit" class="form-control rounded-0 rounded-end" type="text" placeholder="編輯"
-                                    v-model="editTodo.content" @keyup.enter="doneEditTask">
+                                    v-model="editTodo.content" @keyup.enter="doneEditTask" @focus="focus === true">
                             </div>
                             <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯"
                                 @click="doneEditTask"></i>
@@ -86,6 +86,7 @@
                 const todoList = ref(JSON.parse(localStorage.getItem('todoList')) || []);
                 const editTodo = ref({});
                 const filterCheck = ref([true, false]);
+                // let focus = ref(true);
 
                 watch(todoList.value, (newValue) => {
                     localStorage.setItem('todoList', JSON.stringify(newValue));
@@ -115,6 +116,7 @@
 
                 function editTask(item) {
                     editTodo.value = { ...item };
+                    // focus.value = !focus.value;
                 };
 
                 function doneEditTask() {
@@ -125,6 +127,7 @@
 
                 function clearAllTask() {
                     todoList.value = [];
+                    editTodo.value = {};
                     localStorage.clear();
                 };
 
@@ -142,6 +145,7 @@
                     doneEditTask,
                     clearAllTask,
                     filterTask,
+                    // focus,
                 };
             }
         });
