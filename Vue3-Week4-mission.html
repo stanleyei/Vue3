@@ -32,7 +32,7 @@
             </div>
             <div class="card text-center">
                 <ul class="list-group list-group-flush text-left" id="todoList">
-                    <li class="list-group-item" v-for="(list, key) in filterTask" :key="key">
+                    <li class="list-group-item" v-for="(list, key) in todoList" :key="key">
                         <div class="d-flex">
                             <div class="form-check">
                                 <div>
@@ -64,10 +64,10 @@
                 <div class="card-footer d-flex justify-content-between">
                     <span>有 <span id="taskCount"> {{ todoList.length }}</span> 筆任務</span>
                     <div class="fw-bold">
-                        <a href="#" class="me-3" @click="filterCheck = [true, false]" title="選擇全部任務">全部</a>
-                        <a href="#" class="me-3" @click="filterCheck = [false]" title="選擇未完成任務">未完成</a>
-                        <a href="#" class="me-3" @click="filterCheck = [true]" title="選擇已完成任務">已完成</a>
-                        <a href="#" @click="clearAllTask" title="清除所有任務">清除所有任務</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [true, false]" title="選擇全部任務">全部</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [false]" title="選擇未完成任務">未完成</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [true]" title="選擇已完成任務">已完成</a>
+                        <a href="" @click.prevent="clearAllTask" title="清除所有任務">清除所有任務</a>
                     </div>
                 </div>
             </div>
@@ -82,32 +82,34 @@
         const app = createApp({
             setup() {
                 let newTodo = ref('');
-                const listKey = ref(1);
-                const todoList = ref([]);
+                const listKey = ref(JSON.parse(localStorage.getItem('listKey')) || 1);
+                const todoList = ref(JSON.parse(localStorage.getItem('todoList')) || []);
                 const editTodo = ref({});
                 const filterCheck = ref([true, false]);
 
                 function addTask(item) {
-                    todoList.value.push({
-                        id: listKey.value,
-                        content: newTodo.value,
-                        checked: false,
-                    });
-                    listKey.value++;
-                    newTodo.value = '';
-                    // localStorage.setItem('todoList', JSON.stringify(todoList.value));
-                    // localStorage.setItem('listKey', JSON.stringify(listKey.value));
+                    if (newTodo.value !== '') {
+                        todoList.value.push({
+                            id: listKey.value,
+                            content: newTodo.value,
+                            checked: false,
+                        });
+                        listKey.value++;
+                        newTodo.value = '';
+                        localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                        localStorage.setItem('listKey', JSON.stringify(listKey.value));
+                    };
                 };
 
                 function removeTask(item) {
                     const index = todoList.value.findIndex(obj => obj.id === item.id);
                     todoList.value.splice(index, 1);
-                    // localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function checkTask(item) {
                     item.checked = !item.checked;
-                    // localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function editTask(item) {
@@ -118,7 +120,7 @@
                     const index = todoList.value.findIndex(obj => obj.id === editTodo.value.id);
                     todoList.value[index] = editTodo.value;
                     editTodo.value = {};
-                    // localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function clearAllTask() {
@@ -142,7 +144,7 @@
                     editTask,
                     doneEditTask,
                     clearAllTask,
-                    filterTask,
+                    // filterTask,
                 };
             }
 
