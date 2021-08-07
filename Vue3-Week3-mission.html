@@ -53,7 +53,7 @@
                                 <label for="edit"
                                     class="d-flex align-items-center input-group-text rounded-0 rounded-start">編輯任務</label>
                                 <input id="edit" class="form-control rounded-0 rounded-end" type="text" placeholder="編輯"
-                                    v-model="editTodo.content" @keyup.enter="doneEditTask">
+                                    v-model="editTodo.content" @keyup.enter="doneEditTask" ref="edit">
                             </div>
                             <i class="bi bi-pencil-fill text-primary lh-auto ms-3 fs-5" title="確認編輯"
                                 @click="doneEditTask"></i>
@@ -63,10 +63,10 @@
                 <div class="card-footer d-flex justify-content-between">
                     <span>有 <span id="taskCount"> {{ todoList.length }}</span> 筆任務</span>
                     <div class="fw-bold">
-                        <a href="#" class="me-3" @click="filterCheck = [true, false]" title="選擇全部任務">全部</a>
-                        <a href="#" class="me-3" @click="filterCheck = [false]" title="選擇未完成任務">未完成</a>
-                        <a href="#" class="me-3" @click="filterCheck = [true]" title="選擇已完成任務">已完成</a>
-                        <a href="#" @click="clearAllTask" title="清除所有任務">清除所有任務</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [true, false]" title="選擇全部任務">全部</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [false]" title="選擇未完成任務">未完成</a>
+                        <a href="" class="me-3" @click.prevent="filterCheck = [true]" title="選擇已完成任務">已完成</a>
+                        <a href="" @click.prevent="clearAllTask" title="清除所有任務">清除所有任務</a>
                     </div>
                 </div>
             </div>
@@ -121,6 +121,7 @@
 
                 editTask(item) {
                     this.editTodo = { ...item };
+                    this.$refs.edit.focus();
                 },
 
                 doneEditTask() {
@@ -131,6 +132,7 @@
 
                 clearAllTask() {
                     this.todoList = [];
+                    this.editTodo = {};
                     localStorage.clear();
                 },
             },
