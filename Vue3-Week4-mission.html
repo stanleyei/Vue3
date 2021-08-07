@@ -87,11 +87,11 @@
                 const editTodo = ref({});
                 const filterCheck = ref([true, false]);
 
-                watch(todoList.value, () => {
-                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                watch(todoList.value, (newValue) => {
+                    localStorage.setItem('todoList', JSON.stringify(newValue));
                 });
 
-                function addTask(item) {
+                function addTask() {
                     if (newTodo.value !== '') {
                         todoList.value.push({
                             id: listKey.value,
