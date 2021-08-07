@@ -32,7 +32,7 @@
             </div>
             <div class="card text-center">
                 <ul class="list-group list-group-flush text-left" id="todoList">
-                    <li class="list-group-item" v-for="(list, key) in todoList" :key="key">
+                    <li class="list-group-item" v-for="(list, key) in filterTask" :key="key">
                         <div class="d-flex">
                             <div class="form-check">
                                 <div>
@@ -78,7 +78,7 @@
         crossorigin="anonymous"></script>
 
     <script type="module">
-        import { createApp, ref, computed, onMounted } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
+        import { createApp, ref, computed } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
         const app = createApp({
             setup() {
                 let newTodo = ref('');
@@ -128,10 +128,7 @@
                     localStorage.clear();
                 };
 
-                const filterTask = computed(() => {
-                    const filterList = todoList.value.filter(list => filterCheck.value.indexOf(list.checked) >= 0);
-                    return filterList;
-                });
+                const filterTask = computed(() => todoList.value.filter(list => filterCheck.value.indexOf(list.checked) >= 0));
 
                 return {
                     newTodo,
@@ -144,68 +141,9 @@
                     editTask,
                     doneEditTask,
                     clearAllTask,
-                    // filterTask,
+                    filterTask,
                 };
             }
-
-            // data() {
-            //     return {
-            //         newTodo: '',
-            //         index: JSON.parse(localStorage.getItem("index")) || 1,
-            //         todoList: JSON.parse(localStorage.getItem("todoList")) || [],
-            //         editTodo: {},
-            //         filterCheck: [true, false],
-            //     };
-            // },
-            // methods: {
-            //     addTask(item) {
-            //         this.todoList.push({
-            //             id: this.index,
-            //             content: this.newTodo,
-            //             checked: false,
-            //         });
-            //         this.index++;
-            //         this.newTodo = '';
-            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
-            //         localStorage.setItem('index', JSON.stringify(this.index));
-            //     },
-
-            //     removeTask(item) {
-            //         const index = this.todoList.findIndex(obj => obj.id === item.id);
-            //         this.todoList.splice(index, 1);
-            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
-            //     },
-
-            //     checkTask(item) {
-            //         item.checked = !item.checked;
-            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
-            //     },
-
-            //     editTask(item) {
-            //         this.editTodo = { ...item };
-            //     },
-
-            //     doneEditTask() {
-            //         const index = this.todoList.findIndex(obj => obj.id === this.editTodo.id);
-            //         this.todoList[index] = this.editTodo;
-            //         this.editTodo = {};
-            //         localStorage.setItem('todoList', JSON.stringify(this.todoList));
-            //     },
-
-            //     clearAllTask() {
-            //         this.todoList = [];
-            //         localStorage.clear();
-            //     },
-            // },
-            // computed: {
-            //     filterTask() {
-            //         const filterList = this.todoList.filter(list => this.filterCheck.indexOf(list.checked) >= 0);
-            //         return filterList;
-            //     },
-            // },
-            // mounted() {
-
-            // }
         });
 
         app.mount('#app');
