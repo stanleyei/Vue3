@@ -78,7 +78,7 @@
         crossorigin="anonymous"></script>
 
     <script type="module">
-        import { createApp, ref, computed } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
+        import { createApp, ref, computed, watch } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.2/vue.esm-browser.min.js';
         const app = createApp({
             setup() {
                 let newTodo = ref('');
@@ -86,6 +86,10 @@
                 const todoList = ref(JSON.parse(localStorage.getItem('todoList')) || []);
                 const editTodo = ref({});
                 const filterCheck = ref([true, false]);
+
+                watch(todoList.value, () => {
+                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
+                });
 
                 function addTask(item) {
                     if (newTodo.value !== '') {
@@ -96,7 +100,6 @@
                         });
                         listKey.value++;
                         newTodo.value = '';
-                        localStorage.setItem('todoList', JSON.stringify(todoList.value));
                         localStorage.setItem('listKey', JSON.stringify(listKey.value));
                     };
                 };
@@ -104,12 +107,10 @@
                 function removeTask(item) {
                     const index = todoList.value.findIndex(obj => obj.id === item.id);
                     todoList.value.splice(index, 1);
-                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function checkTask(item) {
                     item.checked = !item.checked;
-                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function editTask(item) {
@@ -120,7 +121,6 @@
                     const index = todoList.value.findIndex(obj => obj.id === editTodo.value.id);
                     todoList.value[index] = editTodo.value;
                     editTodo.value = {};
-                    localStorage.setItem('todoList', JSON.stringify(todoList.value));
                 };
 
                 function clearAllTask() {
