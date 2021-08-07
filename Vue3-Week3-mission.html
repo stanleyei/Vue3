@@ -90,15 +90,17 @@
             },
             methods: {
                 addTask(item) {
-                    this.todoList.push({
-                        id: this.index,
-                        content: this.newTodo,
-                        checked: false,
-                    });
-                    this.index++;
-                    this.newTodo = '';
-                    localStorage.setItem('todoList', JSON.stringify(this.todoList));
-                    localStorage.setItem('index', JSON.stringify(this.index));
+                    if(this.newTodo !== ''){
+                        this.todoList.push({
+                            id: this.index,
+                            content: this.newTodo,
+                            checked: false,
+                        });
+                        this.index++;
+                        this.newTodo = '';
+                        localStorage.setItem('todoList', JSON.stringify(this.todoList));
+                        localStorage.setItem('index', JSON.stringify(this.index));
+                    };
                 },
 
                 removeTask(item) {
