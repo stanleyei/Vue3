@@ -18,6 +18,10 @@
         i {
             cursor: pointer;
         }
+
+        .editing {
+            background-color: rgba(0, 255, 76, 0.3);
+        }
     </style>
 </head>
 
@@ -117,7 +121,7 @@
                     editTodo.value = { ...item };
                     this.$refs.edit.focus();
                 };
-
+                
                 function doneEditTask() {
                     const index = todoList.value.findIndex(obj => obj.id === editTodo.value.id);
                     todoList.value[index] = editTodo.value;
