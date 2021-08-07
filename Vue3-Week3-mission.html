@@ -90,8 +90,8 @@
             },
             watch: {
                 todoList: {
-                    handler(item) {
-                        localStorage.setItem('todoList', JSON.stringify(item));
+                    handler(newValue) {
+                        localStorage.setItem('todoList', JSON.stringify(newValue));
                     },
                     deep: true,
                 },
