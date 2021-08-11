@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app"></div>
+
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyBu3vNTWK3ygmpNdo0zrZ-RNDZnlUF8t6I",
+            authDomain: "vuechat-b32cc.firebaseapp.com",
+            projectId: "vuechat-b32cc",
+            storageBucket: "vuechat-b32cc.appspot.com",
+            messagingSenderId: "343330875656",
+            appId: "1:343330875656:web:378c5801d5417a9a21a4bd",
+            measurementId: "G-4B9BXYBF70"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+    </script>
+
+    <script>
+        const db = firebase.database();
+        const chatroomRef = db.ref('chatroom');
+        const app = Vue.createApp({
+            data() {
+                return {
+                    chatroom: [],
+                    tempUsername: '',
+                    username: 'Stanley',
+                    message: '',
+                }
+            },
+            methods: {
+                addMessage() {
+                    if (!this.message.trim()) {
+                        return;
+                    };
+                    console.log(this.message);
+                    const key = chatroomRef.push().key;
+                    chatroomRef.child(key).set({
+                        username: this.username,
+                        message: this.message,
+                        time: new Data().toLocaleString(),
+                        key
+                    });
+                    this.message = '';
+                }
+            },
+            mounted() {
+                chatroomRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    console.log(data);
+                    this.chatroom = data;
+                })
+            },
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
