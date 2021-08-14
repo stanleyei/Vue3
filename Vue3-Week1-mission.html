@@ -110,9 +110,16 @@
                     // });
 
                     //利用原生fetch取資料
-                    fetch('https://randomuser.me/api/?results=6', { method: 'GET'})
-                        .then(response => response.json())
-                        .then(result => this.data = result.results);
+                    const url = 'https://randomuser.me/api/?results=6';
+                    fetch(url)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            };
+                            throw new Error('Network response was not ok.');
+                        })
+                        .then(result => (this.data = result.results))
+                        .catch(error => console.error('Error:', error.message));
                 },
             },
             mounted() {
